@@ -23,11 +23,11 @@ current_user = fastapi_users.current_user()
 
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
-    tags=["auth"],
+    prefix = "/auth",
+    tags = ["auth"],
 )
 
-@app.post("/auth/logout", tags=["auth"])
+@app.post("/auth/logout", tags = ["auth"])
 async def logout(user = Depends(current_user), manager: UserManager = Depends(get_user_manager)):
     await redis.delete(user.redis_token_key)
     await manager._update(user, {"redis_token_key": None})
@@ -36,19 +36,19 @@ async def logout(user = Depends(current_user), manager: UserManager = Depends(ge
 
 app.include_router(
     fastapi_users.get_auth_router(backend=auth_backend),
-    prefix='/auth',
-    tags=['auth']
+    prefix = '/auth',
+    tags = ['auth']
 )
 
 app.include_router(
     fastapi_users.get_reset_password_router(),
-    prefix='/auth',
-    tags=['auth']
+    prefix = '/auth',
+    tags = ['auth']
 )
 
 app.include_router(
     fastapi_users.get_verify_router(UserRead),
-    prefix="/auth",
+    prefix = "/auth",
     tags = ["auth"]
 )
 
@@ -59,5 +59,5 @@ if __name__ == "__main__":
         __name__ + ":app",
         host='127.0.0.1',
         port=7000,
-        reload=True
+        reload = True
     )

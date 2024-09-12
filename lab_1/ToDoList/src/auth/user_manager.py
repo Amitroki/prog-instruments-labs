@@ -32,9 +32,9 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     async def on_after_register(self, user: User, request: Optional[Request] = None):
 
         content: str = f"<div>Dear {user.username}, you has been registred at ToDoList service</div>"
-        email: dict[str, str] = get_email_template_dashboard(to=user.email,
+        email: dict[str, str] = get_email_template_dashboard(to = user.email,
                                                             theme="Successful registration",
-                                                            content=content)
+                                                            content = content)
         send_email_report_dashboard.delay(email)
 
         print(f"User {user.id} has registered.")
@@ -43,42 +43,42 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         self, user: User, token: str, request: Optional[Request] = None
     ):
         content: str = f"<div>Dear {user.username}, use this token to reset your password</div><div>{token}</div>"
-        email: dict[str, str] = get_email_template_dashboard(to=user.email,
+        email: dict[str, str] = get_email_template_dashboard(to = user.email,
                                                             theme="Password reset",
-                                                            content=content)
+                                                            content = content)
         send_email_report_dashboard.delay(email)
 
         print(f"User {user.id} has forgot their password. Reset token: {token}")
 
     async def on_after_reset_password(self, user: User, request: Request | None = None) -> None:
         content: str = f"<div>Dear {user.username}, your password has been reseted</div>"
-        email: dict[str, str] = get_email_template_dashboard(to=user.email,
+        email: dict[str, str] = get_email_template_dashboard(to = user.email,
                                                             theme="Successful password reset",
-                                                            content=content)
+                                                            content = content)
         send_email_report_dashboard.delay(email)
 
-        print(f"User {user.id}has reseted password")
+        print(f"User {user.id} has reseted password")
 
     async def on_after_request_verify(
         self, user: User, token: str, request: Optional[Request] = None
     ):
         content: str = f"<div>Dear {user.username}, use this token to verify your password</div><div>{token}</div>"
-        email: dict[str, str] = get_email_template_dashboard(to=user.email,
+        email: dict[str, str] = get_email_template_dashboard(to = user.email,
                                                             theme="Email verification",
-                                                            content=content)
+                                                            content = content)
         send_email_report_dashboard.delay(email)
 
         print(f"Verification requested for user {user.id}. Verification token: {token}")
     
     async def on_after_verify(self, user: User, request: Request | None = None) -> None:
         content: str = f"<div>Dear {user.username}, your email has been verified"
-        email: dict[str, str] = get_email_template_dashboard(to=user.email,
+        email: dict[str, str] = get_email_template_dashboard(to = user.email,
                                                             theme="Successful email verification",
-                                                            content=content)
+                                                            content = content)
         send_email_report_dashboard.delay(email)
 
         print(f"User {user.id} has been verified")
 
 
-async def get_user_manager(user_db=Depends(get_user_db)):
+async def get_user_manager(user_db = Depends(get_user_db)):
     yield UserManager(user_db)
