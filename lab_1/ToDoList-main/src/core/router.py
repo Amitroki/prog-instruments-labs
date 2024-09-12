@@ -1,3 +1,4 @@
+from main import fastapi_users
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -11,11 +12,9 @@ from auth.models import User
 
 
 router = APIRouter(
-    prefix = "/todo",
-    tags = ["ToDoList"]
+    prefix="/todo",
+    tags=["ToDoList"]
 )
-
-from main import fastapi_users
 
 current_user = fastapi_users.current_user()
 
@@ -28,7 +27,9 @@ async def add_item_to_list(item: ItemCreate,
     await session.commit()
 
 @router.get("/get_items", response_model = list[ItemRead])
-async def get_items(sort_by: list[str] = Query(default=["do_till", "1"], max_length=2, min_length=2),
+async def get_items(sort_by: list[str] = Query(default=["do_till", "1"], 
+                                               max_length=2, 
+                                               min_length=2),
                     user: User = Depends(current_user),
                     session: AsyncSession = Depends(get_async_session)):
     
@@ -43,10 +44,12 @@ async def get_items(sort_by: list[str] = Query(default=["do_till", "1"], max_len
     user_with_items = await session.execute(query)
     user_with_items = user_with_items.unique().scalars().first()
 
-    res = [ItemRead.model_validate(i, from_attributes = True) for i in user_with_items.to_do_items]
+    res = [ItemRead.model_validate(i, from_attributes = True) 
+           for i in user_with_items.to_do_items]
 
     if sort_by[1] != 0:
-        res.sort(key=lambda x: getattr(x, sort_by[0]), reverse = True if sort_by[1] > 0 else False)
+        res.sort(key=lambda x: getattr(x, sort_by[0]), 
+                 reverse = True if sort_by[1] > 0 else False)
 
     return res
 

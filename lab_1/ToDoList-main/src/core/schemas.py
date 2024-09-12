@@ -10,9 +10,11 @@ class ItemCreate(BaseModel):
     priority: int = Field(le=10, ge=0, default=0)
     do_till: Optional[datetime]
 
+
 class ItemRead(ItemCreate):
     id: UUID
     is_done: bool
+
 
 class ItemUpdate(ItemCreate):
     name: Optional[str]

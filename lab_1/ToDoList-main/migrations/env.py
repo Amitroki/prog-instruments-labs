@@ -1,3 +1,7 @@
+from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+from database import Base
+from core.models import Item
+from auth.models import User
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,16 +9,13 @@ from sqlalchemy import pool
 
 from alembic import context
 
-import os, sys
+import os
+import sys
 sys.path.append(os.path.join(sys.path[0], 'src'))
 
-#files with models start
-from auth.models import User
-from core.models import Item
-#files with models end
+# files with models start
+# files with models end
 
-from database import Base
-from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
