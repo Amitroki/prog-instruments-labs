@@ -18,4 +18,3 @@ class Item(Base):
         TIMESTAMP(timezone=True), default=None, nullable=True)
     is_done: Mapped[bool] = mapped_column(Boolean, default=False)
     user = relationship("User", back_populates="to_do_items")
-

@@ -29,7 +29,7 @@ app.include_router(
 
 
 @app.post("/auth/logout", tags=["auth"])
-async def logout(user=Depends(current_user), 
+async def logout(user=Depends(current_user),
                  manager: UserManager = Depends(get_user_manager)):
     await redis.delete(user.redis_token_key)
     await manager._update(user, {"redis_token_key": None})

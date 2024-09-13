@@ -18,21 +18,23 @@ router = APIRouter(
 
 current_user = fastapi_users.current_user()
 
+
 @router.post("/add_item")
-async def add_item_to_list(item: ItemCreate, 
+async def add_item_to_list(item: ItemCreate,
                            session: AsyncSession = Depends(get_async_session),
                            user: User = Depends(current_user)):
-    item_db = Item(**item.model_dump(), user_id = user.id)
+    item_db = Item(**item.model_dump(), user_id=user.id)
     session.add(item_db)
     await session.commit()
 
-@router.get("/get_items", response_model = list[ItemRead])
-async def get_items(sort_by: list[str] = Query(default=["do_till", "1"], 
-                                               max_length=2, 
+
+@router.get("/get_items", response_model=list[ItemRead])
+async def get_items(sort_by: list[str] = Query(default=["do_till", "1"],
+                                               max_length=2,
                                                min_length=2),
                     user: User = Depends(current_user),
                     session: AsyncSession = Depends(get_async_session)):
-    
+
     if sort_by[0] not in (None, "priority", "do_till"):
         raise HTTPException(422)
     try:
@@ -40,21 +42,23 @@ async def get_items(sort_by: list[str] = Query(default=["do_till", "1"],
     except:
         raise HTTPException(422)
 
-    query = select(User).options(joinedload(User.to_do_items)).filter(user.id == User.id)
+    query = select(User).options(joinedload(
+        User.to_do_items)).filter(user.id == User.id)
     user_with_items = await session.execute(query)
     user_with_items = user_with_items.unique().scalars().first()
 
-    res = [ItemRead.model_validate(i, from_attributes = True) 
+    res = [ItemRead.model_validate(i, from_attributes=True)
            for i in user_with_items.to_do_items]
 
     if sort_by[1] != 0:
-        res.sort(key=lambda x: getattr(x, sort_by[0]), 
-                 reverse = True if sort_by[1] > 0 else False)
+        res.sort(key=lambda x: getattr(x, sort_by[0]),
+                 reverse=True if sort_by[1] > 0 else False)
 
     return res
 
+
 @router.post("/marks_as_done")
-async def mark(item_id: UUID, 
+async def mark(item_id: UUID,
                user: User = Depends(current_user),
                session: AsyncSession = Depends(get_async_session)
                ):
@@ -64,6 +68,7 @@ async def mark(item_id: UUID,
         return
     item_db.is_done = True
     await session.commit()
+
 
 @router.patch("/update_item")
 async def update_item(item_id: UUID,
@@ -79,6 +84,7 @@ async def update_item(item_id: UUID,
         if val is not None:
             setattr(item_db, field, val)
     await session.commit()
+
 
 @router.delete("/delete_item")
 async def delete_item(item_id,
