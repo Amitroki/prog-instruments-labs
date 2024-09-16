@@ -7,6 +7,19 @@ from database import Base
 
 
 class Item(Base):
+    """ The model of the to-do item in the database.
+
+    Attributes:
+        __table name__ (str): The name of the table in the database ("item").
+        id (Mapped[uuid.UUID]): A unique element identifier generated automatically.
+        user_id (Mapped[uuid.UUID]): The foreign key that binds the element to the user.
+        name (Mapped[str]): The name of the element.
+        comment (Mapped[str]): Comment on the element. It may be empty.
+        priority (Mapped[int]): The priority of the element (default is 0). It may be empty.
+        do_till (Mapped[DATE | TIMESTAMP]): The date or time before which the element should be executed. It may be empty.
+        is_done (Mapped[bool]): The execution status of the element (False by default).
+        user (relationship): The relationship with the user model ("User"). Used to get the user who owns the item.
+    """
     __tablename__ = 'item'
     id: Mapped[uuid.UUID] = mapped_column(
         UUID, primary_key=True, default=lambda: uuid.uuid4())

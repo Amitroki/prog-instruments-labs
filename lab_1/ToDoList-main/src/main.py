@@ -1,14 +1,13 @@
-import uvicorn
 import uuid
 
+import uvicorn
 from fastapi import Depends, FastAPI
 from fastapi_users import FastAPIUsers
 
-from auth.auth_backend import auth_backend
+from auth.auth_backend import auth_backend, redis
 from auth.models import User
 from auth.schemas import UserRead, UserCreate
 from auth.user_manager import get_user_manager, UserManager
-from auth.auth_backend import redis
 
 from core.router import router as core_router
 
@@ -31,6 +30,15 @@ app.include_router(
 @app.post("/auth/logout", tags=["auth"])
 async def logout(user=Depends(current_user),
                  manager: UserManager = Depends(get_user_manager)):
+    """ Termination of the current user's session.
+
+    Args:
+        user (User): The current authenticated user.
+        manager (User Manager): User Manager.
+
+    Returns:
+        dict: A message about a successful logout.
+    """
     await redis.delete(user.redis_token_key)
     await manager._update(user, {"redis_token_key": None})
 

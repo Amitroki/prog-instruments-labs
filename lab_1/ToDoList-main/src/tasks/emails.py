@@ -1,8 +1,8 @@
-import sys
 import os
+import sys
 import smtplib
-
 from email.message import EmailMessage
+
 from celery import Celery
 from config import SMTP_PASSWORD, SMTP_USER, REDIS_HOST, REDIS_PORT
 
@@ -18,6 +18,16 @@ def get_email_template_dashboard(to: str,
                                  theme: str,
                                  content: str
                                  ) -> dict[str, str]:
+    """ Creates an email template for the control panel.
+
+    Args:
+        to (str): The recipient's email address.
+        subject (str): The subject of the email.
+        content (str): The contents of the email are in HTML format.
+
+    Returns:
+        dict[str, str]: A dictionary containing the headers and contents of an email.
+    """
     email = dict()
     email['Subject'] = theme
     email['From'] = SMTP_USER
@@ -29,6 +39,15 @@ def get_email_template_dashboard(to: str,
 
 @celery.task(name='tasks.emails.send_email_report_dashboard')
 def send_email_report_dashboard(dict_email: dict[str, str]):
+    """ Sends an email with a report based on the provided template.
+
+    Args:
+        dict_email (dict[str, str]): A dictionary with data for sending an email
+                                     containing headers and contents.
+
+    Performs:
+        Sends an email via the SMTP server using the settings from the configuration.
+    """
     email = EmailMessage()
     email['Subject'] = dict_email['Subject']
     email['From'] = dict_email['From']

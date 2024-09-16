@@ -1,16 +1,15 @@
-from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
-from database import Base
-from core.models import Item
-from auth.models import User
-from logging.config import fileConfig
-
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
-from alembic import context
-
 import os
 import sys
+from logging.config import fileConfig
+
+from alembic import context
+from sqlalchemy import engine_from_config, pool
+
+from auth.models import User
+from core.models import Item
+from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+from database import Base
+
 sys.path.append(os.path.join(sys.path[0], 'src'))
 
 # files with models start

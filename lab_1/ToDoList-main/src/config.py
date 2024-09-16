@@ -1,5 +1,5 @@
-import dotenv
 import os
+import dotenv
 
 dotenv.load_dotenv()
 DB_USER = os.getenv("DB_USER")
