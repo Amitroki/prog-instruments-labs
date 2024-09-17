@@ -1,7 +1,7 @@
 from sqlalchemy import String
 from sqlalchemy.orm import mapped_column, Mapped, relationship
-
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
+
 from database import Base
 
 

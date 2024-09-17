@@ -1,6 +1,7 @@
 import redis.asyncio
 
 from fastapi_users.authentication import BearerTransport, RedisStrategy, AuthenticationBackend
+
 from config import REDIS_HOST, REDIS_PORT
 
 
@@ -15,7 +16,7 @@ def get_redis_strategy() -> RedisStrategy:
 
     Returns:
         RedisStrategy: An instance of Red is Strategy with a specified token lifetime of 3600 seconds (1 hour).
-    """    
+    """
     return RedisStrategy(redis, lifetime_seconds=3600)
 
 
